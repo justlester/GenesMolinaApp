@@ -1,7 +1,8 @@
 {
   "name": "GenesMolinaApp",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

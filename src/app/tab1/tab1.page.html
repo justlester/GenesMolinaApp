@@ -1,17 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Employees
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- <ion-list>
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+      </ion-avatar>
+      <ion-label>Pokémon Yellow</ion-label>
+    </ion-item>
+  </ion-list> -->
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-card *ngIf="employeeDetails">
+    <ion-card-header>
+      <ion-card-title>
+        {{employeeDetails.first_name+' '+employeeDetails.last_name}}
+      </ion-card-title>
+      <ion-card-subtitle>
+        {{employeeDetails.emp_no}}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <b>Birth Date: </b>{{employeeDetails.birth_date}}<br/>
+      <b>Gender: </b>{{employeeDetails.gender}}<br/>
+      <b>Hire Date: </b>{{employeeDetails.hire_date}}
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
