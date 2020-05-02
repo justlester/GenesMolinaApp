@@ -1,0 +1,7 @@
+{
+  "name": "GenesMolinaApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
