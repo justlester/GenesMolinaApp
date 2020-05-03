@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Employee Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card *ngIf="employeeDetail">
+      <ion-card-header>
+        <ion-card-title>
+          {{employeeDetail.first_name+' '+employeeDetail.last_name}}
+        </ion-card-title>
+        <ion-card-subtitle>
+          {{employeeDetail.emp_no}}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <b>Birth Date: </b>{{employeeDetail.birth_date}}<br/>
+        <b>Gender: </b>{{employeeDetail.gender}}<br/>
+        <!-- <b>Hire Date: </b>{{employeeDetail.hire_date}} -->
+      </ion-card-content>
+  </ion-card>
+</ion-content>

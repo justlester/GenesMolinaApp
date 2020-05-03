@@ -35,6 +35,24 @@ export class HttpService {
     });
   }
 
+  postRequest(url,param){
+    return new Promise(async(resolve,reject)=>{
+      try{
+        if(this.platform.is('cordova')){
+          //RUNNING ON DEVICE 
+          var res = await this.httpDevice.post(url,param,{});
+          resolve(res);
+        }else{
+          //RUNNING ON BROWSER
+          var res2 = await this.httpWeb.post(url,param).toPromise();
+          resolve(res2);
+        }
+      }catch(err){
+        reject(err);
+      }
+    });
+  }
+
 
 
 

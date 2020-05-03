@@ -7,29 +7,26 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <ion-list>
-    <ion-item>
+  
+  <ion-list>
+
+    <ion-item *ngFor="let item of employeesList" (click)="getEmployeeDetails(item)">
       <ion-avatar slot="start">
         <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
       </ion-avatar>
-      <ion-label>Pokémon Yellow</ion-label>
+      <ion-label>
+        <h2>{{item.first_name+' '+item.last_name}}</h2>
+        <p>{{item.emp_no}}</p>
+      </ion-label>
     </ion-item>
-  </ion-list> -->
 
-  <ion-card *ngIf="employeeDetails">
-    <ion-card-header>
-      <ion-card-title>
-        {{employeeDetails.first_name+' '+employeeDetails.last_name}}
-      </ion-card-title>
-      <ion-card-subtitle>
-        {{employeeDetails.emp_no}}
-      </ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <b>Birth Date: </b>{{employeeDetails.birth_date}}<br/>
-      <b>Gender: </b>{{employeeDetails.gender}}<br/>
-      <b>Hire Date: </b>{{employeeDetails.hire_date}}
-    </ion-card-content>
-  </ion-card>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="getMoreEmployees($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more Employees...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>
