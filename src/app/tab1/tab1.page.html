@@ -4,11 +4,26 @@
       Employees
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar debounce="500" [(ngModel)]="searchEmployeeQuery" (ionChange)="searchEmployee()"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  
-  <ion-list>
+<ion-content>
+    <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="refreshEmployeeList($event)">
+      <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+      </ion-refresher-content>
+    </ion-refresher>
+
+  <div *ngIf="employeesLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!employeesLoading">
 
     <ion-item *ngFor="let item of employeesList" (click)="getEmployeeDetails(item)">
       <ion-avatar slot="start">
@@ -17,6 +32,22 @@
       <ion-label>
         <h2>{{item.first_name+' '+item.last_name}}</h2>
         <p>{{item.emp_no}}</p>
+      </ion-label>
+      <div slot="end">
+        <ion-button (click)="showEditForm($event,item);" fill="clear" size="small">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="showDeleteConfirm($event,item)" fill="clear" size="small" color="danger">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+
+    <ion-item *ngIf="employeesList.length == 0">
+      <ion-label>
+        <p class="ion-text-center">
+          -No employees to show-
+        </p>
       </ion-label>
     </ion-item>
 
@@ -28,5 +59,12 @@
       loadingText="Loading more Employees...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="showAddForm()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
 
 </ion-content>

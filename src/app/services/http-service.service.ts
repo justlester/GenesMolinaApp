@@ -23,7 +23,7 @@ export class HttpService {
         if(this.platform.is('cordova')){
           //RUNNING ON DEVICE 
           var res = await this.httpDevice.get(url,{},{});
-          resolve(res);
+          resolve(JSON.parse(res.data));
         }else{
           //RUNNING ON BROWSER
           var res2 = await this.httpWeb.get(url).toPromise();
@@ -45,6 +45,24 @@ export class HttpService {
         }else{
           //RUNNING ON BROWSER
           var res2 = await this.httpWeb.post(url,param).toPromise();
+          resolve(res2);
+        }
+      }catch(err){
+        reject(err);
+      }
+    });
+  }
+
+  deleteRequest(url,param){
+    return new Promise(async(resolve,reject)=>{
+      try{
+        if(this.platform.is('cordova')){
+          //RUNNING ON DEVICE 
+          var res = await this.httpDevice.delete(url,param,{});
+          resolve(res);
+        }else{
+          //RUNNING ON BROWSER
+          var res2 = await this.httpWeb.delete(url,param).toPromise();
           resolve(res2);
         }
       }catch(err){
