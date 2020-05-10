@@ -41,7 +41,7 @@ export class HttpService {
         if(this.platform.is('cordova')){
           //RUNNING ON DEVICE 
           var res = await this.httpDevice.post(url,param,{});
-          resolve(res);
+          resolve(JSON.parse(res.data));
         }else{
           //RUNNING ON BROWSER
           var res2 = await this.httpWeb.post(url,param).toPromise();
@@ -59,7 +59,7 @@ export class HttpService {
         if(this.platform.is('cordova')){
           //RUNNING ON DEVICE 
           var res = await this.httpDevice.delete(url,param,{});
-          resolve(res);
+          resolve(JSON.parse(res.data));
         }else{
           //RUNNING ON BROWSER
           var res2 = await this.httpWeb.delete(url,param).toPromise();

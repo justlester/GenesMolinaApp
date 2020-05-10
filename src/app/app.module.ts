@@ -10,15 +10,24 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ManageEmployeePage } from './pages/manage-employee/manage-employee.page';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [
+    AppComponent,
+    ManageEmployeePage
+  ],
+  entryComponents: [
+    ManageEmployeePage
+  ],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     StatusBar,

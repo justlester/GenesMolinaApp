@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+
+    <ion-title>{{ manageEmployeeTitle }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="manageForm" (ngSubmit)="submitManageEmployee()">
+    <ion-item>
+      <ion-label position="floating">Employee Number</ion-label>
+      <ion-input type="number" formControlName="emp_no" [readonly]="!isAddEmployee"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">First Name</ion-label>
+      <ion-input type="text" formControlName="fname"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Last Name</ion-label>
+      <ion-input type="text" formControlName="lname"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Date of Birth</ion-label>
+      <ion-datetime formControlName="dbirth"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Gender</ion-label>
+      <ion-select formControlName="gender">
+        <ion-select-option value="M">Male</ion-select-option>
+        <ion-select-option value="F">Female</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button color="primary" expand="block" type="submit" [disabled]="manageForm.invalid">
+      {{ manageEmployeeButton }}
+    </ion-button>
+  </form>
+
+</ion-content>

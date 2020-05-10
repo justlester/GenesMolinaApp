@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { HttpService } from '../services/http-service.service';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationExtras } from '@angular/router';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController, ModalController } from '@ionic/angular';
+import { ManageEmployeePage } from '../pages/manage-employee/manage-employee.page';
 
 @Component({
   selector: 'app-tab1',
@@ -23,7 +24,8 @@ export class Tab1Page {
     private router:Router,
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    public modalCtrl: ModalController
   ) {
     this.getEmployeeList();
   }
@@ -86,207 +88,242 @@ export class Tab1Page {
   }
 
   async showAddForm(){
-    const alert = await this.alertCtrl.create({
-      backdropDismiss: false,
-      header: 'Add Employee',
-      subHeader: 'Please enter the fields below.',
-      inputs:[
-        {
-          name: 'emp_no',
-          type: 'number',
-          placeholder: 'Employee Number'
-        },
-        {
-          name: 'fname',
-          type: 'text',
-          placeholder: 'First name'
-        },
-        {
-          name:'lname',
-          type:'text',
-          placeholder:'Last name'
-        },
-        {
-          name: 'dbirth',
-          type: 'date',
-          placeholder:'Birthday'
-        },
-        // {
-        //   name: 'gender',
-        //   type: 'radio',
-        //   label:'Male',
-        //   value:'M',
-        //   checked: true
-        // },
-        // {
-        //   name:'gender',
-        //   type:'radio',
-        //   label:'Female',
-        //   value:'F'
-        // },
-      ],
-      buttons:[
-        {
-          text:'Cancel',
-          role:'cancel'
-        },
-        {
-          text: 'Add',
-          handler: async (data)=>{
-            data.gender = 'M';
-            console.log('submitted',data);
-
-            const loading = await this.loadingCtrl.create({message:'Adding Employee...'});
-            await loading.present();
-
-            this.myHttpService
-            // .postRequest(environment.apiUrlOrigin+'add_employee',data)
-            .postRequest(environment.apiUrlOrigin+'add_employee/'+data.emp_no+'/'+data.fname+'/'+data.lname+'/'+data.dbirth+'/'+data.gender,null)
-            .then(async (res:any)=>{
-              console.log(res);
-              if(res.sucess){
-
-                var toastSuccess = await this.toastCtrl.create({
-                  message:'Successfully Added!',
-                  color: 'success',
-                  duration: 3000
-                });
-                toastSuccess.present();
-
-              }else{
-
-                var toastError = await this.toastCtrl.create({
-                  message:'Something went wrong please try again.',
-                  color: 'danger',
-                  duration: 3000
-                });
-                toastError.present();
-                console.error(res);
-
-              }
-            }).catch(async err=>{
-
-              var toastError = await this.toastCtrl.create({
-                message:'Something went wrong please try again.',
-                color: 'danger',
-                duration: 3000
-              });
-              toastError.present();
-              console.error(err);
-
-            }).finally(()=>{
-              loading.dismiss();
-              this.getEmployeeList();
-            });
-          }
-        }
-      ]
+    const modal = await this.modalCtrl.create({
+      component: ManageEmployeePage,
+      componentProps: {
+        isAddEmployee: true
+      }
     });
-    await alert.present();
+    await modal.present();
+    modal.onWillDismiss().then((res:any)=>{
+      console.log(res);
+      if(!res.data.cancel){
+        this.getEmployeeList();
+      }
+    });
+
+    // const alert = await this.alertCtrl.create({
+    //   backdropDismiss: false,
+    //   header: 'Add Employee',
+    //   subHeader: 'Please enter the fields below.',
+    //   inputs:[
+    //     {
+    //       name: 'emp_no',
+    //       type: 'number',
+    //       placeholder: 'Employee Number'
+    //     },
+    //     {
+    //       name: 'fname',
+    //       type: 'text',
+    //       placeholder: 'First name'
+    //     },
+    //     {
+    //       name:'lname',
+    //       type:'text',
+    //       placeholder:'Last name'
+    //     },
+    //     {
+    //       name: 'dbirth',
+    //       type: 'date',
+    //       placeholder:'Birthday'
+    //     },
+    //     // {
+    //     //   name: 'gender',
+    //     //   type: 'radio',
+    //     //   label:'Male',
+    //     //   value:'M',
+    //     //   checked: true
+    //     // },
+    //     // {
+    //     //   name:'gender',
+    //     //   type:'radio',
+    //     //   label:'Female',
+    //     //   value:'F'
+    //     // },
+    //   ],
+    //   buttons:[
+    //     {
+    //       text:'Cancel',
+    //       role:'cancel'
+    //     },
+    //     {
+    //       text: 'Add',
+    //       handler: async (data)=>{
+    //         data.gender = 'M';
+    //         console.log('submitted',data);
+
+    //         const loading = await this.loadingCtrl.create({message:'Adding Employee...'});
+    //         await loading.present();
+
+    //         this.myHttpService
+    //         // .postRequest(environment.apiUrlOrigin+'add_employee',data)
+    //         .postRequest(environment.apiUrlOrigin+'add_employee/'+data.emp_no+'/'+data.fname+'/'+data.lname+'/'+data.dbirth+'/'+data.gender,{})
+    //         .then(async (res:any)=>{
+    //           console.log(res);
+    //           if(res.success){
+
+    //             var toastSuccess = await this.toastCtrl.create({
+    //               message:'Successfully Added!',
+    //               color: 'success',
+    //               duration: 3000
+    //             });
+    //             toastSuccess.present();
+
+    //           }else{
+
+    //             var toastError = await this.toastCtrl.create({
+    //               message:'Something went wrong please try again.',
+    //               color: 'danger',
+    //               duration: 3000
+    //             });
+    //             toastError.present();
+    //             console.error(res);
+
+    //           }
+    //         }).catch(async err=>{
+
+    //           var toastError = await this.toastCtrl.create({
+    //             message:'Something went wrong please try again.',
+    //             color: 'danger',
+    //             duration: 3000
+    //           });
+    //           toastError.present();
+    //           console.error(err);
+
+    //         }).finally(()=>{
+    //           loading.dismiss();
+    //           this.getEmployeeList();
+    //         });
+    //       }
+    //     }
+    //   ]
+    // });
+    // await alert.present();
   }
 
   async showEditForm(event,employee){
     event.stopPropagation();
-    const alert = await this.alertCtrl.create({
-      backdropDismiss: false,
-      header: 'Edit Employee',
-      inputs:[
-        // {
-        //   name: 'emp_no',
-        //   type: 'number',
-        //   placeholder: 'Employee Number',
-        //   value: employee.emp_no
-        // },
-        {
-          name: 'fname',
-          type: 'text',
-          placeholder: 'First name',
-          value: employee.first_name
-        },
-        {
-          name:'lname',
-          type:'text',
-          placeholder:'Last name',
-          value: employee.last_name
-        },
-        {
-          name: 'dbirth',
-          type: 'date',
-          placeholder:'Birthday',
-          value: employee.birth_date
-        },
-        // {
-        //   name: 'gender',
-        //   type: 'radio',
-        //   label:'Male',
-        //   value:'M',
-        //   checked: true
-        // },
-        // {
-        //   name:'gender',
-        //   type:'radio',
-        //   label:'Female',
-        //   value:'F'
-        // },
-      ],
-      buttons:[
-        {
-          text:'Cancel',
-          role:'cancel'
-        },
-        {
-          text: 'Save',
-          handler: async (data)=>{
-            // data.gender = 'M';
-            console.log('updated data',data);
 
-            const loading = await this.loadingCtrl.create({message:'Updating Employee...'});
-            await loading.present();
-
-            this.myHttpService
-            // .postRequest(environment.apiUrlOrigin+'update_employee/id',data)
-            .postRequest(environment.apiUrlOrigin+'update_employee/'+employee.emp_no+'/'+data.fname+'/'+data.lname+'/'+data.dbirth+'/'+data.gender,null)
-            .then(async (res:any)=>{
-              console.log(res);
-              if(res.success){
-
-                var toastSuccess = await this.toastCtrl.create({
-                  message:'Successfully Updated!',
-                  color: 'success',
-                  duration: 3000
-                });
-                toastSuccess.present();
-
-              }else{
-
-                var toastError = await this.toastCtrl.create({
-                  message:'Something went wrong please try again.',
-                  color: 'danger',
-                  duration: 3000
-                });
-                toastError.present();
-                console.error(res);
-
-              }
-            }).catch(async err=>{
-
-              var toastError = await this.toastCtrl.create({
-                message:'Something went wrong please try again.',
-                color: 'danger',
-                duration: 3000
-              });
-              toastError.present();
-              console.error(err);
-
-            }).finally(()=>{
-              loading.dismiss();
-              this.getEmployeeList();
-            });
-          }
-        }
-      ]
+    const modal = await this.modalCtrl.create({
+      component: ManageEmployeePage,
+      componentProps: {
+        isAddEmployee: false,
+        paramEmpno: employee.emp_no,
+        paramFname: employee.first_name,
+        paramLname: employee.last_name,
+        paramDbirth: employee.birth_date,
+        paramGender: employee.gender
+      }
     });
-    await alert.present();
+    await modal.present();
+    modal.onWillDismiss().then((res:any)=>{
+      console.log(res);
+      if(!res.data.cancel){
+        this.getEmployeeList();
+      }
+    });
+
+    
+    // const alert = await this.alertCtrl.create({
+    //   backdropDismiss: false,
+    //   header: 'Edit Employee',
+    //   inputs:[
+    //     // {
+    //     //   name: 'emp_no',
+    //     //   type: 'number',
+    //     //   placeholder: 'Employee Number',
+    //     //   value: employee.emp_no
+    //     // },
+    //     {
+    //       name: 'fname',
+    //       type: 'text',
+    //       placeholder: 'First name',
+    //       value: employee.first_name
+    //     },
+    //     {
+    //       name:'lname',
+    //       type:'text',
+    //       placeholder:'Last name',
+    //       value: employee.last_name
+    //     },
+    //     {
+    //       name: 'dbirth',
+    //       type: 'date',
+    //       placeholder:'Birthday',
+    //       value: employee.birth_date
+    //     },
+    //     // {
+    //     //   name: 'gender',
+    //     //   type: 'radio',
+    //     //   label:'Male',
+    //     //   value:'M',
+    //     //   checked: true
+    //     // },
+    //     // {
+    //     //   name:'gender',
+    //     //   type:'radio',
+    //     //   label:'Female',
+    //     //   value:'F'
+    //     // },
+    //   ],
+    //   buttons:[
+    //     {
+    //       text:'Cancel',
+    //       role:'cancel'
+    //     },
+    //     {
+    //       text: 'Save',
+    //       handler: async (data)=>{
+    //         // data.gender = 'M';
+    //         console.log('updated data',data);
+
+    //         const loading = await this.loadingCtrl.create({message:'Updating Employee...'});
+    //         await loading.present();
+
+    //         this.myHttpService
+    //         // .postRequest(environment.apiUrlOrigin+'update_employee/id',data)
+    //         .postRequest(environment.apiUrlOrigin+'update_employee/'+employee.emp_no+'/'+data.fname+'/'+data.lname+'/'+data.dbirth+'/'+data.gender,{})
+    //         .then(async (res:any)=>{
+    //           console.log(res);
+    //           if(res.success){
+
+    //             var toastSuccess = await this.toastCtrl.create({
+    //               message:'Successfully Updated!',
+    //               color: 'success',
+    //               duration: 3000
+    //             });
+    //             toastSuccess.present();
+
+    //           }else{
+
+    //             var toastError = await this.toastCtrl.create({
+    //               message:'Something went wrong please try again.',
+    //               color: 'danger',
+    //               duration: 3000
+    //             });
+    //             toastError.present();
+    //             console.error(res);
+
+    //           }
+    //         }).catch(async err=>{
+
+    //           var toastError = await this.toastCtrl.create({
+    //             message:'Something went wrong please try again.',
+    //             color: 'danger',
+    //             duration: 3000
+    //           });
+    //           toastError.present();
+    //           console.error(err);
+
+    //         }).finally(()=>{
+    //           loading.dismiss();
+    //           this.getEmployeeList();
+    //         });
+    //       }
+    //     }
+    //   ]
+    // });
+    // await alert.present();
   }
 
   async showDeleteConfirm(event,employee){
@@ -308,10 +345,10 @@ export class Tab1Page {
 
             this.myHttpService
             // .postRequest(environment.apiUrlOrigin+'update_employee/id',data)
-            .postRequest(environment.apiUrlOrigin+'delete_employee/'+employee.emp_no,null)
+            .postRequest(environment.apiUrlOrigin+'delete_employee/'+employee.emp_no,{})
             .then(async (res:any)=>{
               console.log(res);
-              if(res.sucess){
+              if(res.success){
 
                 var toastSuccess = await this.toastCtrl.create({
                   message:'Successfully Deleted!',
@@ -365,7 +402,7 @@ export class Tab1Page {
       }else{
         this.employeesList = [];
         this.employeesLoading = true;
-        this.myHttpService.postRequest(environment.apiUrlOrigin+'search_employee/'+this.searchEmployeeQuery+'/'+this.searchEmployeeQuery+'/1',null)
+        this.myHttpService.postRequest(environment.apiUrlOrigin+'search_employee/'+this.searchEmployeeQuery+'/'+this.searchEmployeeQuery+'/1',{})
         .then((res:any)=>{
           this.employeesList = res.employees;
           this.employeesNext = res.next;
